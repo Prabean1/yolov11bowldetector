@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <title>Project Template</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+</head>
+
+<body>
+    <div class="container-sm|md|lg|xl p-4 m-3 bg-dark">
+        <h2 id="header1" class="text-white">LF Object Detection</h2>
+    </div>
+    <div class="container-sm|md|lg|xl px-3 mx-3">
+        <div class="row">
+            <h5 id="p1" class="text-dark">Press Single Object Detection to select and process 1 image or Batch Object Detection for mulitple images in the folder.</h5>
+        </div>
+    </div>
+    <div class="container-sm|md|lg|xl px-3 m-3">
+        <div class="row">
+            <button id="btn1" onclick="singleobject()" class="btn mr-3 btn-secondary">Single Object Detection</button>
+            <button id="btn2" onclick="multipleobject()" type="button" class="btn mr-3 btn-warning">Batch Object Detection</button>
+        </div>
+    </div>
+    <div class="container-sm|md|lg|xl pb-3 m-3">
+        <div class="row">
+            <div class="col-md-4">
+                <h5 id="leftlabel">Original Image</h5>
+                <img id="left" src="../static/empty.png" alt="No Image loaded">
+            </div>
+            <div class="col-md-4">
+                <h5 id="centerlabel">Detected Image</h5>
+                <img id="center" src="../static/empty.png" alt="No Image loaded">
+            </div>
+            <div class="col-md-4"></div>
+        </div>
+    </div>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <script src="../static/script.js"></script>
+</body>
+
+</html>

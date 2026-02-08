@@ -14,15 +14,18 @@
     </div>
     <div class="container-sm|md|lg|xl px-3 mx-3">
         <div class="row">
-            <h5 id="p1" class="text-dark">Press Single Object Detection to select and process 1 image or Batch Object Detection for mulitple images in the folder.</h5>
+            <h5 id="p1" class="text-dark">Click to drop image(s) for processing</h5>
         </div>
     </div>
     <div class="container-sm|md|lg|xl px-3 m-3">
-        <div class="row">
-            <button id="btn1" onclick="singleobject()" class="btn mr-3 btn-secondary">Single Object Detection</button>
-            <button id="btn2" onclick="multipleobject()" type="button" class="btn mr-3 btn-warning">Batch Object Detection</button>
+        <!--Borders for the drag and drop field, makes it easier to use-->
+        <div id="drop-zone" class="border border-secondary p-5 text-center bg-light"
+            style="border-style: dashed !important; cursor: pointer;">
+            <h5 class="text-secondary">Drag and drop images here</h5>
+            <p class="text-muted">Single image for quick look, or multiple for batch processing</p>
         </div>
     </div>
+
     <div class="container-sm|md|lg|xl pb-3 m-3">
         <div class="row">
             <div class="col-md-4">

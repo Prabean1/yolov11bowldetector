@@ -29,7 +29,8 @@ def singleobject():
 
         image = cv2.imread(filepath)
         image = resize_image(image, 300)
-        processed_image = detect_objects(image)
+        confidence = float(request.form.get('confidence', 0.25))
+        processed_image = detect_objects(image, confidence)
         
         os.remove(filepath)
 
@@ -59,7 +60,8 @@ def multipleobject():
 
         image = cv2.imread(filepath)
         image = resize_image(image, 300)
-        processed_image = detect_objects(image) # Placeholder for processing
+        confidence = float(request.form.get('confidence', 0.25))
+        processed_image = detect_objects(image, confidence) # Placeholder for processing
 
         # Save the image with bounding boxes
         output_image_path = os.path.join(output_folder, os.path.splitext(os.path.basename(filepath))[0] + "_predict.jpg")

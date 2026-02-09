@@ -9,8 +9,30 @@
 </head>
 
 <body>
+    <!-- Loading Overlay -->
+    <style>
+        #loading-overlay.active {
+            display: flex !important;
+        }
+    </style>
+    <div id="loading-overlay" class="position-fixed w-100 h-100 d-none justify-content-center align-items-center"
+        style="top: 0; left: 0; background: rgba(0,0,0,0.5); z-index: 9999;">
+        <div class="text-center">
+            <div class="spinner-border text-info" role="status">
+                <span class="sr-only">Loading...</span>
+            </div>
+            <p id="loading-text" class="text-white mt-3">Processing...</p>
+        </div>
+    </div>
+
     <div class="container-sm|md|lg|xl p-4 m-3 bg-dark">
-        <h2 id="header1" class="text-white">LF Object Detection</h2>
+        <div class="d-flex justify-content-between align-items-center">
+            <h2 id="header1" class="text-white">LF Object Detection</h2>
+            <div class="custom-control custom-switch">
+                <input type="checkbox" class="custom-control-input" id="dark-mode-toggle">
+                <label class="custom-control-label text-white" for="dark-mode-toggle">Dark Mode</label>
+            </div>
+        </div>
     </div>
     <div class="container-sm|md|lg|xl px-3 mx-3">
         <div class="row">
@@ -27,16 +49,44 @@
     </div>
 
     <div class="container-sm|md|lg|xl pb-3 m-3">
-        <div class="row">
-            <div class="col-md-4">
+        <div class="row justify-content-center">
+            <div class="col-md-4 text-center">
                 <h5 id="leftlabel">Original Image</h5>
-                <img id="left" src="../static/empty.png" alt="No Image loaded">
+                <img id="left" src="../static/empty.png" alt="No Image loaded" style="max-width: 100%;">
             </div>
-            <div class="col-md-4">
+            <div class="col-md-2 text-center d-flex flex-column justify-content-center">
+                <h6 class="text-muted">Current Image</h6>
+                <h3 id="current-count" class="text-primary">0</h3>
+                <p class="text-muted mb-3">bowls</p>
+                <h6 class="text-muted">Total Count</h6>
+                <h3 id="total-count" class="text-success">0</h3>
+                <p class="text-muted">bowls</p>
+            </div>
+            <div class="col-md-4 text-center">
                 <h5 id="centerlabel">Detected Image</h5>
-                <img id="center" src="../static/empty.png" alt="No Image loaded">
+                <img id="center" src="../static/empty.png" alt="No Image loaded" style="max-width: 100%;">
             </div>
-            <div class="col-md-4"></div>
+        </div>
+        <div class="row justify-content-center mt-4">
+            <div class="col-md-6 text-center">
+                <label for="confidence-slider" class="form-label">Confidence Threshold: <span
+                        id="confidence-value">0.25</span></label>
+                <input type="range" class="custom-range" id="confidence-slider" min="0.1" max="0.9" step="0.05"
+                    value="0.25">
+            </div>
+        </div>
+        <div class="row justify-content-center mt-3">
+            <div class="col-md-6 text-center">
+                <button id="download-btn" class="btn btn-success mr-2">Download Image</button>
+                <button id="reset-btn" class="btn btn-secondary">Reset</button>
+            </div>
+        </div>
+        <div class="row justify-content-center mt-4">
+            <div class="col-md-10">
+                <h6 class="text-muted">Detection History</h6>
+                <div id="history-gallery" class="d-flex flex-wrap border rounded p-2 bg-light"
+                    style="min-height: 80px;"></div>
+            </div>
         </div>
     </div>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>

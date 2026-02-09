@@ -1,3 +1,5 @@
+//Note: AI was used to assist for indentation purposes and debugging
+
 // Global AJAX Loading Spinner
 $(document).ajaxStart(function () {
     $('#loading-overlay').addClass('active');
@@ -174,6 +176,9 @@ function singleDrop(file) {
                 $('#center').attr('src', 'data:image/png;base64,' + response.center);
                 $('#leftlabel').text(response.leftlabel);
                 $('#centerlabel').text(response.centerlabel);
+                $('#current-count').text(response.count);
+                $('#total-count').text(response.count);
+                addToHistory('data:image/png;base64,' + response.center);
             }
         },
         error: function () {
@@ -207,6 +212,7 @@ function multipleDrop(files) {
                 alert(response.error);
             } else {
                 let index = 0;
+                let runningTotal = 0;
                 const total = response.length;
                 $('#loading-text').text('Done!');
                 function displayNextImage() {
@@ -215,6 +221,10 @@ function multipleDrop(files) {
                         $('#center').attr('src', 'data:image/png;base64,' + response[index].center);
                         $('#leftlabel').text(response[index].leftlabel);
                         $('#centerlabel').text(response[index].centerlabel);
+                        $('#current-count').text(response[index].count);
+                        runningTotal += response[index].count;
+                        $('#total-count').text(runningTotal);
+                        addToHistory('data:image/png;base64,' + response[index].center);
                         index++;
                         setTimeout(displayNextImage, 500);
                     }
@@ -244,9 +254,9 @@ confidenceSlider.addEventListener('input', function () {
 confidenceSlider.addEventListener('change', function () {
     if (lastUploadedFile) {
         singleConf(lastUploadedFile, this.value);
-} else if (lastUploadedFiles) {
+    } else if (lastUploadedFiles) {
         multiConf(lastUploadedFiles, this.value);
-}
+    }
 });
 
 function singleConf(file, confidence) {
@@ -270,6 +280,9 @@ function singleConf(file, confidence) {
                 $('#center').attr('src', 'data:image/png;base64,' + response.center);
                 $('#leftlabel').text(response.leftlabel);
                 $('#centerlabel').text(response.centerlabel);
+                $('#current-count').text(response.count);
+                $('#total-count').text(response.count);
+                addToHistory('data:image/png;base64,' + response.center);
             }
         },
         error: function () {
@@ -285,7 +298,7 @@ function multiConf(files, confidence) {
     const formData = new FormData();
     for (let i = 0; i < files.length; i++) {
         formData.append('files', files[i]);
-}
+    }
     formData.append('confidence', confidence);
     $.ajax({
         type: "POST",
@@ -298,6 +311,7 @@ function multiConf(files, confidence) {
                 alert(response.error);
             } else {
                 let index = 0;
+                let runningTotal = 0;
                 const total = response.length;
                 $('#loading-text').text('Done!');
                 function displayNextImage() {
@@ -306,6 +320,10 @@ function multiConf(files, confidence) {
                         $('#center').attr('src', 'data:image/png;base64,' + response[index].center);
                         $('#leftlabel').text(response[index].leftlabel);
                         $('#centerlabel').text(response[index].centerlabel);
+                        $('#current-count').text(response[index].count);
+                        runningTotal += response[index].count;
+                        $('#total-count').text(runningTotal);
+                        addToHistory('data:image/png;base64,' + response[index].center);
                         index++;
                         setTimeout(displayNextImage, 500);
                     }
@@ -317,4 +335,64 @@ function multiConf(files, confidence) {
             alert('Error in Processing');
         }
     });
+}
+
+// Download Button
+document.getElementById('download-btn').addEventListener('click', function () {
+    const img = document.getElementById('center');
+    if (img.src.includes('empty.png')) {
+        alert('No processed image to download');
+        return;
+    }
+    const link = document.createElement('a');
+    link.download = 'detected_image.png';
+    link.href = img.src;
+    link.click();
+});
+
+// Reset Button
+document.getElementById('reset-btn').addEventListener('click', function () {
+    document.getElementById('left').src = '../static/empty.png';
+    document.getElementById('center').src = '../static/empty.png';
+    document.getElementById('leftlabel').textContent = 'Original Image';
+    document.getElementById('centerlabel').textContent = 'Detected Image';
+    document.getElementById('current-count').textContent = '0';
+    document.getElementById('total-count').textContent = '0';
+    document.getElementById('confidence-slider').value = 0.25;
+    document.getElementById('confidence-value').textContent = '0.25';
+    lastUploadedFile = null;
+    lastUploadedFiles = null;
+});
+
+// Dark Mode Toggle
+document.getElementById('dark-mode-toggle').addEventListener('change', function () {
+    if (this.checked) {
+        document.body.classList.add('bg-dark', 'text-white');
+        document.getElementById('p1').classList.remove('text-dark');
+        document.getElementById('p1').classList.add('text-light');
+        document.getElementById('history-gallery').classList.remove('bg-light');
+        document.getElementById('history-gallery').classList.add('bg-secondary');
+    } else {
+        document.body.classList.remove('bg-dark', 'text-white');
+        document.getElementById('p1').classList.add('text-dark');
+        document.getElementById('p1').classList.remove('text-light');
+        document.getElementById('history-gallery').classList.add('bg-light');
+        document.getElementById('history-gallery').classList.remove('bg-secondary');
+    }
+});
+
+// History Gallery
+function addToHistory(imgSrc) {
+    const gallery = document.getElementById('history-gallery');
+    const thumb = document.createElement('img');
+    thumb.src = imgSrc;
+    thumb.className = 'mr-2 mb-2 border rounded';
+    thumb.style.width = '60px';
+    thumb.style.height = '60px';
+    thumb.style.objectFit = 'cover';
+    thumb.style.cursor = 'pointer';
+    thumb.onclick = function () {
+        document.getElementById('center').src = this.src;
+    };
+    gallery.appendChild(thumb);
 }

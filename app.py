@@ -30,7 +30,7 @@ def singleobject():
         image = cv2.imread(filepath)
         image = resize_image(image, 300)
         confidence = float(request.form.get('confidence', 0.25))
-        processed_image = detect_objects(image, confidence)
+        processed_image, count = detect_objects(image, confidence)
         
         os.remove(filepath)
 
@@ -39,6 +39,7 @@ def singleobject():
             'center': to_base64(processed_image),
             'leftlabel': 'Original',
             'centerlabel': 'Processed Image',
+            'count': count,
         })
 
 @app.route('/multipleobject', methods=['POST'])
@@ -61,7 +62,7 @@ def multipleobject():
         image = cv2.imread(filepath)
         image = resize_image(image, 300)
         confidence = float(request.form.get('confidence', 0.25))
-        processed_image = detect_objects(image, confidence) # Placeholder for processing
+        processed_image, count = detect_objects(image, confidence)
 
         # Save the image with bounding boxes
         output_image_path = os.path.join(output_folder, os.path.splitext(os.path.basename(filepath))[0] + "_predict.jpg")
@@ -73,6 +74,7 @@ def multipleobject():
             'center': to_base64(processed_image),
             'leftlabel': 'Original',
             'centerlabel': 'Processed Image',
+            'count': count,
         })
 
         os.remove(filepath)

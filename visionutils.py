@@ -26,7 +26,7 @@ def draw_bounding_box(img, class_id, confidence, x, y, x_plus_w, y_plus_h):
     cv2.rectangle(img, (x, y), (x_plus_w, y_plus_h), color, 2)
     cv2.putText(img, label, (x - 10, y - 10), cv2.FONT_HERSHEY_SIMPLEX, 0.5, color, 2)
 
-def detect_objects(image):
+def detect_objects(image, confidence_threshold=0.25):
     height, width, _ = image.shape
     length = max(height, width)
     square_image = np.zeros((length, length, 3), np.uint8)
@@ -46,7 +46,7 @@ def detect_objects(image):
     for i in range(outputs.shape[1]):
         classes_scores = outputs[0][i][4:]
         (minScore, maxScore, minClassLoc, (x, maxClassIndex)) = cv2.minMaxLoc(classes_scores)
-        if maxScore >= 0.25 and maxClassIndex in CLASS_IDS:
+        if maxScore >= confidence_threshold and maxClassIndex in CLASS_IDS:
             local_class_id = CLASS_IDS.index(maxClassIndex)
             box = [
                 outputs[0][i][0] - (0.5 * outputs[0][i][2]),
@@ -58,10 +58,11 @@ def detect_objects(image):
             scores.append(maxScore)
             class_ids.append(local_class_id)
     
-    result_boxes = cv2.dnn.NMSBoxes(boxes, scores, 0.25, 0.45, 0.5)
+    result_boxes = cv2.dnn.NMSBoxes(boxes, scores, confidence_threshold, 0.45, 0.5)
     
     detected_image = image.copy()
-    for i in range(len(result_boxes)):
+    detection_count = len(result_boxes)
+    for i in range(detection_count):
         index = result_boxes[i]
         box = boxes[index]
         draw_bounding_box(
@@ -75,4 +76,4 @@ def detect_objects(image):
         )
     
      
-    return detected_image
+    return detected_image, detection_count

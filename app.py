@@ -28,8 +28,10 @@ def singleobject():
         file.save(filepath)
 
         image = cv2.imread(filepath)
-        image = resize_image(image, 300)
+        image = resize_image(image, 300)\
+        # get confidence values, send default of 0.25
         confidence = float(request.form.get('confidence', 0.25))
+        # detect_objects returns the processed image itself and the count
         processed_image, count = detect_objects(image, confidence)
         
         os.remove(filepath)

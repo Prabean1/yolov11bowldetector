@@ -1,12 +1,52 @@
-//Note: AI was used to assist for indentation purposes and debugging
+$(document).ready(function () {
+    $('#drop-zone').css({
+        'border-style': 'dashed',
+        'cursor': 'pointer',
+        'border-color': '#000000',
+        'border-width': '2px',
+        'border-radius': '10px'
+    });
 
-// Global AJAX Loading Spinner
+    // Loading overlay positioning
+    $('#loading-overlay').css({
+        'top': '0',
+        'left': '0',
+        'background': 'rgba(0,0,0,0.5)',
+        'z-index': '9999'
+    });
+
+    $('body').css('background-color', '#e8e8e8');
+
+    $('#header1').css('font-family', "'Orbitron', sans-serif");
+
+    $('#dark-mode-container').css({
+        'right': '0',
+        'top': '50%',
+        'transform': 'translateY(-50%)'
+    });
+
+    $('#original-image-container, #detected-image-container').css({
+        'border': '2px solid #000000',
+        'border-radius': '10px'
+    });
+
+    $('#confidence-container').css({
+        'border': '2px solid #000000',
+        'border-radius': '10px'
+    });
+
+    $('#history-gallery').css({
+        'border': '2px solid #000000',
+        'border-radius': '10px'
+    });
+});
+
 $(document).ajaxStart(function () {
-    $('#loading-overlay').addClass('active');
+    $('#loading-overlay').removeClass('d-none').addClass('d-flex');
 });
 
 $(document).ajaxStop(function () {
-    $('#loading-overlay').removeClass('active');
+    $('#loading-overlay').removeClass('d-flex').addClass('d-none');
 });
 
 function singleobject() {
@@ -128,14 +168,21 @@ dropZone.addEventListener('click', () => {
 ['dragenter', 'dragover'].forEach(eventName => {
     dropZone.addEventListener(eventName, () => {
         dropZone.classList.add('bg-secondary', 'text-white');
-        dropZone.classList.remove('bg-light');
+        dropZone.classList.remove('bg-white');
+        dropZone.style.backgroundColor = '';
     }, false);
 });
 // Visual feeback too, but revert changes made by dragenter or dragover
 ['dragleave', 'drop'].forEach(eventName => {
     dropZone.addEventListener(eventName, () => {
+        const isDarkMode = document.getElementById('dark-mode-toggle').checked;
         dropZone.classList.remove('bg-secondary', 'text-white');
-        dropZone.classList.add('bg-light');
+        if (isDarkMode) {
+            dropZone.style.backgroundColor = '#2a2a2a';
+        } else {
+            dropZone.style.backgroundColor = '';
+            dropZone.classList.add('bg-white');
+        }
     }, false);
 });
 
@@ -292,7 +339,7 @@ function singleConf(file, confidence) {
 }
 function multiConf(files, confidence) {
     const totalFiles = files.length;
-    const estSeconds = Math.round(totalFiles * 0.2);
+    const estSeconds = Math.round(files.length * 0.2);
     const timeStr = estSeconds >= 60 ? Math.round(estSeconds / 60) + 'm' : estSeconds + 's';
     $('#loading-text').text('Processing ' + totalFiles + ' Images (Confidence: ' + confidence + '), Estimated time: ~' + timeStr);
     const formData = new FormData();
@@ -364,24 +411,70 @@ document.getElementById('reset-btn').addEventListener('click', function () {
     lastUploadedFiles = null;
 });
 
-// Dark Mode Toggle
+// Dark Mode Toggle (i know this is inefficient, shush)
 document.getElementById('dark-mode-toggle').addEventListener('change', function () {
+    const dropZone = document.getElementById('drop-zone');
+    const leftlabel = document.getElementById('leftlabel');
+    const centerlabel = document.getElementById('centerlabel');
+    const originalContainer = document.getElementById('original-image-container');
+    const detectedContainer = document.getElementById('detected-image-container');
+    const confidenceContainer = document.getElementById('confidence-container');
+    const historyGallery = document.getElementById('history-gallery');
+
     if (this.checked) {
-        document.body.classList.add('bg-dark', 'text-white');
+        document.body.classList.remove('bg-light');
+        document.body.style.backgroundColor = '#121212';
+        document.body.classList.add('text-white');
         document.getElementById('p1').classList.remove('text-dark');
         document.getElementById('p1').classList.add('text-light');
-        document.getElementById('history-gallery').classList.remove('bg-light');
-        document.getElementById('history-gallery').classList.add('bg-secondary');
+        dropZone.style.borderColor = '#ffffff';
+        dropZone.style.backgroundColor = '#2a2a2a';
+        dropZone.classList.remove('bg-white');
+        originalContainer.style.borderColor = '#ffffff';
+        originalContainer.style.backgroundColor = '#2a2a2a';
+        originalContainer.classList.remove('bg-white');
+        detectedContainer.style.borderColor = '#ffffff';
+        detectedContainer.style.backgroundColor = '#2a2a2a';
+        detectedContainer.classList.remove('bg-white');
+        confidenceContainer.style.borderColor = '#ffffff';
+        confidenceContainer.style.backgroundColor = '#2a2a2a';
+        confidenceContainer.classList.remove('bg-white');
+        confidenceContainer.classList.add('text-white');
+        historyGallery.style.borderColor = '#ffffff';
+        historyGallery.style.backgroundColor = '#2a2a2a';
+        historyGallery.classList.remove('bg-light');
+        leftlabel.classList.remove('text-dark');
+        leftlabel.classList.add('text-white');
+        centerlabel.classList.remove('text-dark');
+        centerlabel.classList.add('text-white');
     } else {
-        document.body.classList.remove('bg-dark', 'text-white');
+        document.body.classList.add('bg-light');
+        document.body.style.backgroundColor = '#e8e8e8';
+        document.body.classList.remove('text-white');
         document.getElementById('p1').classList.add('text-dark');
         document.getElementById('p1').classList.remove('text-light');
-        document.getElementById('history-gallery').classList.add('bg-light');
-        document.getElementById('history-gallery').classList.remove('bg-secondary');
+        dropZone.style.borderColor = '#000000';
+        dropZone.style.backgroundColor = '';
+        dropZone.classList.add('bg-white');
+        originalContainer.style.borderColor = '#000000';
+        originalContainer.style.backgroundColor = '';
+        originalContainer.classList.add('bg-white');
+        detectedContainer.style.borderColor = '#000000';
+        detectedContainer.style.backgroundColor = '';
+        detectedContainer.classList.add('bg-white');
+        confidenceContainer.style.borderColor = '#000000';
+        confidenceContainer.style.backgroundColor = '';
+        confidenceContainer.classList.add('bg-white');
+        confidenceContainer.classList.remove('text-white');
+        historyGallery.style.borderColor = '#000000';
+        historyGallery.style.backgroundColor = '';
+        historyGallery.classList.add('bg-light');
+        leftlabel.classList.remove('text-white');
+        leftlabel.classList.add('text-dark');
+        centerlabel.classList.remove('text-white');
+        centerlabel.classList.add('text-dark');
     }
 });
-
-// History Gallery
 function addToHistory(imgSrc) {
     const gallery = document.getElementById('history-gallery');
     const thumb = document.createElement('img');

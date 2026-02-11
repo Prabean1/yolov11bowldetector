@@ -2,21 +2,20 @@
 <html lang="en">
 
 <head>
-    <title>Project Template</title>
+    <title>Praveen's Project</title>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700&display=swap" rel="stylesheet">
 </head>
 
-<body>
-    <!-- Loading Overlay -->
-    <style>
-        #loading-overlay.active {
-            display: flex !important;
-        }
-    </style>
+<body class="bg-light">
+    <!-- Loading overlay -->
     <div id="loading-overlay" class="position-fixed w-100 h-100 d-none justify-content-center align-items-center"
-        style="top: 0; left: 0; background: rgba(0,0,0,0.5); z-index: 9999;">
+        data-backdrop="static">
         <div class="text-center">
             <div class="spinner-border text-info" role="status">
                 <span class="sr-only">Loading...</span>
@@ -25,10 +24,11 @@
         </div>
     </div>
 
-    <div class="container-sm|md|lg|xl p-4 m-3 bg-dark">
-        <div class="d-flex justify-content-between align-items-center">
-            <h2 id="header1" class="text-white">LF Object Detection</h2>
-            <div class="custom-control custom-switch">
+    <div class="container-sm|md|lg|xl p-4 m-3 bg-dark rounded">
+        <div class="d-flex justify-content-center align-items-center position-relative">
+            <h2 id="header1" class="text-white font-weight-bold text-center mb-0">Praveen's Bowl Detector and Counter
+            </h2>
+            <div class="custom-control custom-switch position-absolute" id="dark-mode-container">
                 <input type="checkbox" class="custom-control-input" id="dark-mode-toggle">
                 <label class="custom-control-label text-white" for="dark-mode-toggle">Dark Mode</label>
             </div>
@@ -36,43 +36,49 @@
     </div>
     <div class="container-sm|md|lg|xl px-3 mx-3">
         <div class="row">
-            <h5 id="p1" class="text-dark">Click to drop image(s) for processing</h5>
+            <h5 id="p1" class="text-dark">Click to drop your bowl image(s) for processing!</h5>
         </div>
     </div>
     <div class="container-sm|md|lg|xl px-3 m-3">
         <!--Borders for the drag and drop field, makes it easier to use-->
-        <div id="drop-zone" class="border border-secondary p-5 text-center bg-light"
-            style="border-style: dashed !important; cursor: pointer;">
-            <h5 class="text-secondary">Drag and drop images here</h5>
-            <p class="text-muted">Single image for quick look, or multiple for batch processing</p>
+        <div id="drop-zone" class="border border-secondary p-5 text-center bg-white rounded" data-dashed="true">
+            <i class="bi bi-cloud-arrow-up display-1 text-secondary mb-3 d-block"></i>
+            <h5 class="text-secondary font-weight-normal">Drag and drop images here</h5>
+            <p class="text-muted mb-0">Single image for quick look, or multiple for batch processing</p>
         </div>
     </div>
 
     <div class="container-sm|md|lg|xl pb-3 m-3">
         <div class="row justify-content-center">
             <div class="col-md-4 text-center">
-                <h5 id="leftlabel">Original Image</h5>
-                <img id="left" src="../static/empty.png" alt="No Image loaded" style="max-width: 100%;">
+                <h4 id="leftlabel" class="font-weight-bold">Original Image</h4>
+                <div id="original-image-container" class="p-2 bg-white">
+                    <img id="left" src="../static/empty.png" alt="No Image loaded" class="img-fluid">
+                </div>
             </div>
             <div class="col-md-2 text-center d-flex flex-column justify-content-center">
                 <h6 class="text-muted">Current Image</h6>
-                <h3 id="current-count" class="text-primary">0</h3>
+                <h3 id="current-count" class="text-primary font-weight-bold">0</h3>
                 <p class="text-muted mb-3">bowls</p>
                 <h6 class="text-muted">Total Count</h6>
-                <h3 id="total-count" class="text-success">0</h3>
+                <h3 id="total-count" class="text-success font-weight-bold">0</h3>
                 <p class="text-muted">bowls</p>
             </div>
             <div class="col-md-4 text-center">
-                <h5 id="centerlabel">Detected Image</h5>
-                <img id="center" src="../static/empty.png" alt="No Image loaded" style="max-width: 100%;">
+                <h4 id="centerlabel" class="font-weight-bold">Detected Image</h4>
+                <div id="detected-image-container" class="p-2 bg-white">
+                    <img id="center" src="../static/empty.png" alt="No Image loaded" class="img-fluid">
+                </div>
             </div>
         </div>
         <div class="row justify-content-center mt-4">
             <div class="col-md-6 text-center">
-                <label for="confidence-slider" class="form-label">Confidence Threshold: <span
-                        id="confidence-value">0.25</span></label>
-                <input type="range" class="custom-range" id="confidence-slider" min="0.1" max="0.9" step="0.05"
-                    value="0.25">
+                <div id="confidence-container" class="p-3 bg-white">
+                    <label for="confidence-slider" class="form-label">Confidence Threshold: <span
+                            id="confidence-value">0.25</span></label>
+                    <input type="range" class="custom-range" id="confidence-slider" min="0.1" max="0.9" step="0.05"
+                        value="0.25">
+                </div>
             </div>
         </div>
         <div class="row justify-content-center mt-3">
